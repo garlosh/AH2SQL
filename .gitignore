@@ -1,0 +1,5 @@
+# Ignorar todas as pastas __pycache__
+__pycache__/
+
+# Ignorar todos os arquivos com a extensão .ipynb
+*.ipynb
