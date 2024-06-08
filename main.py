@@ -1,15 +1,21 @@
 import schedule
-import time
 from tokenHandler.tokenHandler import *
 from ah2Sql.ah2Sql import *
 
-# Agendamento da tarefa a cada 5 minutos
-#schedule.every(5).minutes.do(fetch_and_store_data)
-#fetch_and_store_data()
-# Loop para manter o script rodando e executar as tarefas agendadas
-#while True:
-    #schedule.run_pending()
-    #time.sleep(1)
-x = tokenHandler('https://oauth.battle.net/token', 'dadc296d33ad4d89b461625e765dab61', 'IhTLcEUksRNtisRQKwylUmBf91teqZZH')
-x.get_access_token()
-print(x.ACCESS_TOKEN)
+def main() -> None:
+    if(~token_acesso.is_valid()):
+        token_acesso.get_access_token()
+        motor.change_token(token_acesso.ACCESS_TOKEN)
+    
+    if(motor.verify_engine()):
+        try:
+            motor.extract_data()
+        except Exception as err:
+            print('erro')
+
+if __name__ == '__main__':
+    motor = ah2Sql('mysql', 'pymysql', 'usuario', 'pass', 'localhost', '3306', 'teste')
+    token_acesso = tokenHandler('https://oauth.battle.net/token', 'dadc296d33ad4d89b461625e765dab61', 'IhTLcEUksRNtisRQKwylUmBf91teqZZH')
+    token_acesso.get_access_token()
+
+    schedule.every(2).hours.do(main)

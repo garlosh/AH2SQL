@@ -1,6 +1,7 @@
 from datetime import datetime, timedelta
 from dataclasses import dataclass
 import requests
+
 @dataclass
 class tokenHandler:
     __URL: str
@@ -8,7 +9,7 @@ class tokenHandler:
     __CLIENT_SECRET: str
     __TOKEN_LIFETIME: int = 86400
 
-    def get_access_token(self):
+    def get_access_token(self) -> str:
         response = requests.post(
             self.__URL,
             data={'grant_type': 'client_credentials'},
@@ -18,7 +19,7 @@ class tokenHandler:
         self.TOKEN_EXPIRATION = datetime.now() + timedelta(seconds = self.__TOKEN_LIFETIME)
         return response.json()['access_token']
     
-    def is_valid(self):
+    def is_valid(self) -> bool:
         if datetime.now() > self.TOKEN_EXPIRATION:
             return False
         else:

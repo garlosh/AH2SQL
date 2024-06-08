@@ -3,14 +3,15 @@ from sqlalchemy import create_engine
 import pandas as pd
 import requests
 import datetime
+
 @dataclass()
 class ah2Sql:
     __DB_TYPE: str  # ou 'postgresql', 'sqlite', etc.
-    __DB_DRIVER: str  # ou o driver apropriado para o seu banco de dados
+    __DB_DRIVER: str  # driver apropriado para o seu banco de dados
     __DB_USER: str
     __DB_PASS: str
     __DB_HOST: str
-    __DB_PORT: str  # ou a porta apropriada para o seu banco de dados
+    __DB_PORT: str  # porta apropriada para o seu banco de dados
     __DB_NAME: str
     __ACCESS_TOKEN: str
 
@@ -20,14 +21,17 @@ class ah2Sql:
         self.__ENGINE = create_engine(DATABASE_URI)
 
 
-    def verify_engine(self):
+    def verify_engine(self) -> bool:
         try:
             self.__ENGINE.connect()
             return True
         except:
             return False
         
-    def extract_data(self):
+    def change_token(self, token) -> None:
+        self.__ACCESS_TOKEN = token
+    
+    def extract_data(self) -> None:
         response = requests.get(self.__API_URL)
         data = response.json()
         data = data['auctions']

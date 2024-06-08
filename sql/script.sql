@@ -30,7 +30,18 @@ CREATE TABLE IF NOT EXISTS `data` (
   `data` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- Dumping data for table ah2sql.data: ~0 rows (approximately)
+-- Data exporting was unselected.
+
+-- Dumping structure for trigger ah2sql.corrigir_valores
+DROP TRIGGER IF EXISTS `corrigir_valores`;
+SET @OLDTMP_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION';
+DELIMITER //
+CREATE DEFINER=`root`@`localhost` TRIGGER `corrigir_valores` BEFORE INSERT ON `data` FOR EACH ROW BEGIN
+	SET NEW.bid = NEW.bid / 10000;
+	SET NEW.buyout = NEW.buyout / 10000;
+END//
+DELIMITER ;
+SET SQL_MODE=@OLDTMP_SQL_MODE;
 
 /*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
