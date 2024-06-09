@@ -52,12 +52,13 @@ class ah2Sql:
         
         #Limpando os dados
         df['item'] = df['item'].apply(lambda x: x['id'])
+        df['buyout'] = df['buyout'].apply(lambda x: x/10000)
         df = df.groupby('item')
         df = df['buyout'].describe()
-        df['data'] = datetime.now()
-        df.rename_axis("item").reset_index()
+        df['safra'] = datetime.now()
+        df = df.rename_axis("item").reset_index()
         df = df.drop(columns= ['25%', '75%'])
-        df = df.rename(columns= {'count':'contagem', 'std': 'desvio', 'min':'minimo', '50%':'mediana', 'max':'maximo'})
+        df = df.rename(columns= {'count':'contagem', 'std': 'desvio', 'min':'minimo', 'mean':'media','50%':'mediana', 'max':'maximo'})
         df.to_sql(self.__DB_TABLE, con=self.__ENGINE, if_exists='append', index=False)
 
 if __name__ == '__main__':

@@ -20,29 +20,22 @@ DROP DATABASE IF EXISTS `ah2sql`;
 CREATE DATABASE IF NOT EXISTS `ah2sql` /*!40100 DEFAULT CHARACTER SET armscii8 COLLATE armscii8_bin */ /*!80016 DEFAULT ENCRYPTION='N' */;
 USE `ah2sql`;
 
--- Copiando estrutura para tabela ah2sql.data
-DROP TABLE IF EXISTS `data`;
-CREATE TABLE IF NOT EXISTS `data` (
-  `item` tinytext CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  `bid` float NOT NULL,
-  `buyout` float NOT NULL,
-  `quantity` smallint NOT NULL,
-  `time_left` tinytext CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci,
-  `data` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+-- Copiando estrutura para tabela ah2sql.summary
+DROP TABLE IF EXISTS `summary`;
+CREATE TABLE IF NOT EXISTS `summary` (
+  `item` char(6) CHARACTER SET armscii8 COLLATE armscii8_bin NOT NULL DEFAULT '',
+  `safra` datetime NOT NULL,
+  `media` float NOT NULL,
+  `mediana` float NOT NULL,
+  `desvio` float DEFAULT NULL,
+  `contagem` int NOT NULL,
+  `minimo` int NOT NULL,
+  `maximo` int NOT NULL,
+  PRIMARY KEY (`item`),
+  KEY `safra` (`safra`)
+) ENGINE=InnoDB DEFAULT CHARSET=armscii8 COLLATE=armscii8_bin;
 
 -- Exportação de dados foi desmarcado.
-
--- Copiando estrutura para trigger ah2sql.corrigir_valores
-DROP TRIGGER IF EXISTS `corrigir_valores`;
-SET @OLDTMP_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
-DELIMITER //
-CREATE TRIGGER `corrigir_valores` BEFORE INSERT ON `data` FOR EACH ROW BEGIN
-	SET NEW.bid = NEW.bid / 10000;
-	SET NEW.buyout = NEW.buyout / 10000;
-END//
-DELIMITER ;
-SET SQL_MODE=@OLDTMP_SQL_MODE;
 
 /*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
