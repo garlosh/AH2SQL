@@ -13,6 +13,7 @@ class ah2Sql:
     __DB_HOST: str
     __DB_PORT: str  # porta apropriada para o seu banco de dados
     __DB_NAME: str
+    __DB_TABLE: str
     __ACCESS_TOKEN: str
 
     def __post_init__(self):
@@ -53,7 +54,7 @@ class ah2Sql:
         df = pd.DataFrame(data)
         df['item'] = df['item'].apply(lambda x: x['id'])
         df['data'] = datetime.now()
-        df.to_sql(self.__DB_NAME, con=self.__ENGINE, if_exists='append', index=False)
+        df.to_sql(self.__DB_TABLE, con=self.__ENGINE, if_exists='append', index=False)
 
 if __name__ == '__main__':
     
