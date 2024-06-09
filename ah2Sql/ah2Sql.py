@@ -42,24 +42,22 @@ class ah2Sql:
     
     
     def extract_data(self) -> None:
-
+        #Resposta da Api
         response = self.__get_api_data()
         
-        
+        #Tratando o json para o pandas
         data = response.json()
         data = data['auctions']
         df = pd.DataFrame(data)
+        
+        #Limpando os dados
         df['item'] = df['item'].apply(lambda x: x['id'])
-        df['data'] = datetime.now()
         df = df.groupby('item')
-        df['media'] = df['buyout'].mean()
-        df['mediana'] = df['buyout'].median()
-        df['contagem'] = df['quantity'].sum()
-        df['desvio'] = df['buyout'].std()
-        df['minimo'] = df['buyout'].min()
-        df['maximo'] = df['buyout'].max()
-
-        df = df.drop(columns= ['id', 'bid', 'buyout', 'quantity', 'time_left'])
+        df = df['buyout'].describe()
+        df['data'] = datetime.now()
+        df.rename_axis("item").reset_index()
+        df = df.drop(columns= ['25%', '75%'])
+        df = df.rename(columns= {'count':'contagem', 'std': 'desvio', 'min':'minimo', '50%':'mediana', 'max':'maximo'})
         df.to_sql(self.__DB_TABLE, con=self.__ENGINE, if_exists='append', index=False)
 
 if __name__ == '__main__':
