@@ -41,6 +41,6 @@ python main.py
 
 ### Próximos passos
 - [X] Extrator dos dados
-- [ ] Sumarizador dos dados passados para redução do gasto de memória
+- [X] Sumarizador dos dados passados para redução do gasto de memória
 - [ ] Classificador dos dados com seus nomes dentro do jogo
 - [ ] Criação de uma ferramenta interativa de consulta dos de métricas dos items 
