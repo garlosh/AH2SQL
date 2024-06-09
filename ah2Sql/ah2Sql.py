@@ -3,6 +3,7 @@ from sqlalchemy import create_engine
 import pandas as pd
 import requests
 from datetime import datetime
+import numpy as np
 
 @dataclass()
 class ah2Sql:
@@ -50,7 +51,15 @@ class ah2Sql:
         df = pd.DataFrame(data)
         df['item'] = df['item'].apply(lambda x: x['id'])
         df['data'] = datetime.now()
-        df = df.drop(columns= 'id')
+        df = df.groupby('item')
+        df['media'] = df['buyout'].mean()
+        df['mediana'] = df['buyout'].median()
+        df['contagem'] = df['quantity'].sum()
+        df['desvio'] = df['buyout'].std()
+        df['minimo'] = df['buyout'].min()
+        df['maximo'] = df['buyout'].max()
+
+        df = df.drop(columns= ['id', 'bid', 'buyout', 'quantity', 'time_left'])
         df.to_sql(self.__DB_TABLE, con=self.__ENGINE, if_exists='append', index=False)
 
 if __name__ == '__main__':

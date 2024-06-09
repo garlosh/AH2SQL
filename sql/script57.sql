@@ -23,10 +23,11 @@ USE `ah2sql`;
 -- Dumping structure for table ah2sql.data
 DROP TABLE IF EXISTS `data`;
 CREATE TABLE IF NOT EXISTS `data` (
-  `id` tinytext NOT NULL,
-  `bid` int(11) NOT NULL,
-  `buyout` int(11) NOT NULL,
+  `item` tinytext NOT NULL,
+  `bid` float NOT NULL,
+  `buyout` float NOT NULL,
   `quantity` smallint(6) NOT NULL,
+  `time_left` tinytext CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci,
   `data` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
