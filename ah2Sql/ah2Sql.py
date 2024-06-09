@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from sqlalchemy import create_engine
 import pandas as pd
 import requests
-import datetime
+from datetime import datetime
 
 @dataclass()
 class ah2Sql:
@@ -43,20 +43,19 @@ class ah2Sql:
     def extract_data(self) -> None:
 
         response = self.__get_api_data()
-        i = 1
-        while response == False or i < 5:
-            response = self.__get_api_data()
-        if ~response:
-            return
+        
         
         data = response.json()
         data = data['auctions']
         df = pd.DataFrame(data)
         df['item'] = df['item'].apply(lambda x: x['id'])
         df['data'] = datetime.now()
+        df = df.drop(columns= 'id')
         df.to_sql(self.__DB_TABLE, con=self.__ENGINE, if_exists='append', index=False)
 
 if __name__ == '__main__':
     
-    from sqlalchemy import create_engine
-    x = ah2Sql('mysql', 'pymysql', 'usuario', 'pass', 'localhost', '3306', 'teste')
+    #from sqlalchemy import create_engine
+    #x = ah2Sql('mysql', 'pymysql', 'root', '', 'localhost', '3306', 'ah2sql','data','')
+    #print(x.verify_engine())
+    datetime.now()
