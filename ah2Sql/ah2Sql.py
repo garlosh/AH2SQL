@@ -27,12 +27,27 @@ class ah2Sql:
             return True
         except:
             return False
-        
+
+    def __get_api_data(self):
+        try:
+            response = requests.get(self.__API_URL)
+            return response
+        except:
+            return False
+
     def change_token(self, token) -> None:
         self.__ACCESS_TOKEN = token
     
+    
     def extract_data(self) -> None:
-        response = requests.get(self.__API_URL)
+
+        response = self.__get_api_data()
+        i = 1
+        while response == False or i < 5:
+            response = self.__get_api_data()
+        if ~response:
+            return
+        
         data = response.json()
         data = data['auctions']
         df = pd.DataFrame(data)

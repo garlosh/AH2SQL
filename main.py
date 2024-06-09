@@ -18,4 +18,5 @@ if __name__ == '__main__':
     token_acesso = tokenHandler('https://oauth.battle.net/token', 'dadc296d33ad4d89b461625e765dab61', 'IhTLcEUksRNtisRQKwylUmBf91teqZZH')
     token_acesso.get_access_token()
 
+    main()
     schedule.every(2).hours.do(main)
