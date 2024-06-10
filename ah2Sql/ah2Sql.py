@@ -53,6 +53,8 @@ class ah2Sql:
         #Limpando os dados
         df['item'] = df['item'].apply(lambda x: x['id'])
         df['buyout'] = df['buyout'].apply(lambda x: x/10000)
+        df.drop(df[df['buyout'] == 0].index, inplace = True)
+        df['buyout'] = df.apply(lambda x: x['buyout']/x['quantity'], axis=1)
         df = df.groupby('item')
         df = df['buyout'].describe()
         df['safra'] = datetime.now()
