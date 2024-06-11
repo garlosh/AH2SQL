@@ -1,18 +1,26 @@
 import schedule
+import time
 from tokenHandler.tokenHandler import *
 from ah2Sql.ah2Sql import *
-import time
+from utils import *
+from datetime import datetime
 
-def main(token_acesso, motor) -> None:
+def main(token_acesso: tokenHandler, motor: ah2Sql) -> None:
     if not token_acesso.is_valid():
         token_acesso.get_access_token()
         motor.change_token(token_acesso.ACCESS_TOKEN)
-        main()
+        log_message('Token de acesso invalido, executando novamente o processo')
+        main(token_acesso, motor)
+
     if motor.verify_engine():
         try:
+            log_message(f'Executando extração {datetime.now()}')
             motor.extract_data()
         except Exception as err:
-            print(err)
+            mins: int = 5
+            log_message(f'Erro na extração, agendando nova extração para {datetime.now() + timedelta(minutes= mins)}')
+            log_message(err, print=False)
+            schedule_once(mins, main, token_acesso, motor)
 
 if __name__ == '__main__':
     

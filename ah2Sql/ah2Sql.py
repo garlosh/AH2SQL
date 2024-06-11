@@ -32,7 +32,7 @@ class ah2Sql:
 
     def __get_api_data(self):
         try:
-            response = requests.get(self.__API_URL)
+            response = requests.get(self.__API_URL).json()
             return response
         except:
             return False
@@ -46,10 +46,9 @@ class ah2Sql:
         response = self.__get_api_data()
         
         #Tratando o json para o pandas
-        data = response.json()
-        data = data['auctions']
-        df = pd.DataFrame(data)
-        
+        df = pd.DataFrame(response['auctions'])
+        del response
+
         #Limpando os dados
         df['item'] = df['item'].apply(lambda x: x['id'])
         df['buyout'] = df['buyout'].apply(lambda x: x/10000)
@@ -62,6 +61,7 @@ class ah2Sql:
         df = df.drop(columns= ['25%', '75%'])
         df = df.rename(columns= {'count':'contagem', 'std': 'desvio', 'min':'minimo', 'mean':'media','50%':'mediana', 'max':'maximo'})
         df.to_sql(self.__DB_TABLE, con=self.__ENGINE, if_exists='append', index=False)
+        return None
 
 if __name__ == '__main__':
     
