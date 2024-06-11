@@ -16,6 +16,7 @@ def main(token_acesso: tokenHandler, motor: ah2Sql) -> None:
         try:
             log_message(f'Executando extração {datetime.now()}')
             motor.extract_data()
+            log_message(f'Extração realizada com sucesso {datetime.now()}')
         except Exception as err:
             mins: int = 5
             log_message(f'Erro na extração, agendando nova extração para {datetime.now() + timedelta(minutes= mins)}')
