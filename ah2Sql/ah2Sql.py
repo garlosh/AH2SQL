@@ -61,6 +61,7 @@ class ah2Sql:
         df = df.drop(columns= ['25%', '75%'])
         df = df.rename(columns= {'count':'contagem', 'std': 'desvio', 'min':'minimo', 'mean':'media','50%':'mediana', 'max':'maximo'})
         df.to_sql(self.__DB_TABLE, con=self.__ENGINE, if_exists='append', index=False)
+        self.__ENGINE.close()
         return None
 
 if __name__ == '__main__':
