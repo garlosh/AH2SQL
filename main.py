@@ -11,17 +11,20 @@ def main(token_acesso: tokenHandler, motor: ah2Sql) -> None:
         motor.change_token(token_acesso.ACCESS_TOKEN)
         log_message('Token de acesso invalido, executando novamente o processo')
         main(token_acesso, motor)
-
+        log_message(f'Extração realizada com sucesso {datetime.now() + timedelta(hours=2)}')
     if motor.verify_engine():
         try:
             log_message(f'Executando extração {datetime.now()}')
             motor.extract_data()
             log_message(f'Extração realizada com sucesso {datetime.now()}')
+            log_message(f'Próxima extração em {datetime.now() + timedelta(hours=2)}')
         except Exception as err:
             mins: int = 5
             log_message(f'Erro na extração, agendando nova extração para {datetime.now() + timedelta(minutes= mins)}')
-            log_message(err, print=False)
+            log_message(err, print_msg=False)
             schedule_once(mins, main, token_acesso, motor)
+            log_message(f'Extração realizada com sucesso {datetime.now()}')
+            log_message(f'Próxima extração em {datetime.now() + timedelta(hours=2)}')
 
 if __name__ == '__main__':
     
