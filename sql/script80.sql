@@ -20,6 +20,28 @@ DROP DATABASE IF EXISTS `ah2sql`;
 CREATE DATABASE IF NOT EXISTS `ah2sql` /*!40100 DEFAULT CHARACTER SET armscii8 COLLATE armscii8_bin */ /*!80016 DEFAULT ENCRYPTION='N' */;
 USE `ah2sql`;
 
+-- Copiando estrutura para procedure ah2sql.adicionar_nome_manual
+DROP PROCEDURE IF EXISTS `adicionar_nome_manual`;
+DELIMITER //
+CREATE PROCEDURE `adicionar_nome_manual`()
+BEGIN
+	UPDATE `summary`
+	LEFT JOIN `item_db` ON `summary`.item = `item_db`.item
+	SET `summary`.`nome` = `item_db`.`nome`
+	WHERE `summary`.nome IS NULL;
+END//
+DELIMITER ;
+
+-- Copiando estrutura para tabela ah2sql.item_db
+DROP TABLE IF EXISTS `item_db`;
+CREATE TABLE IF NOT EXISTS `item_db` (
+  `item` char(6) CHARACTER SET armscii8 COLLATE armscii8_bin NOT NULL,
+  `nome` varchar(50) CHARACTER SET armscii8 COLLATE armscii8_bin DEFAULT NULL,
+  PRIMARY KEY (`item`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=armscii8 COLLATE=armscii8_bin;
+
+-- Exportação de dados foi desmarcado.
+
 -- Copiando estrutura para tabela ah2sql.summary
 DROP TABLE IF EXISTS `summary`;
 CREATE TABLE IF NOT EXISTS `summary` (
@@ -28,11 +50,11 @@ CREATE TABLE IF NOT EXISTS `summary` (
   `media` float NOT NULL,
   `mediana` float NOT NULL,
   `desvio` float DEFAULT NULL,
-  `contagem` int NOT NULL,
-  `minimo` int NOT NULL,
-  `maximo` int NOT NULL,
-  PRIMARY KEY (`item`),
-  KEY `safra` (`safra`)
+  `contagem` smallint NOT NULL,
+  `minimo` float NOT NULL,
+  `maximo` float NOT NULL,
+  `nome` varchar(50) COLLATE armscii8_bin DEFAULT NULL,
+  PRIMARY KEY (`item`,`safra`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=armscii8 COLLATE=armscii8_bin;
 
 -- Exportação de dados foi desmarcado.

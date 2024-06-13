@@ -4,28 +4,28 @@ import pandas as pd
 
 @dataclass
 class sqlHandler:
-    __DB_TYPE: str  # ou 'postgresql', 'sqlite', etc.
-    __DB_DRIVER: str  # driver apropriado para o seu banco de dados
-    __DB_USER: str
-    __DB_PASS: str
-    __DB_HOST: str
-    __DB_PORT: str  # porta apropriada para o seu banco de dados
-    __DB_NAME: str
-    __DB_TABLE: str
+    DB_TYPE: str  # ou 'postgresql', 'sqlite', etc.
+    DB_DRIVER: str  # driver apropriado para o seu banco de dados
+    DB_USER: str
+    DB_PASS: str
+    DB_HOST: str
+    DB_PORT: str  # porta apropriada para o seu banco de dados
+    DB_NAME: str
+    DB_TABLE: str
 
     def __post_init__(self) -> None:
-        DATABASE_URI = f'{self.__DB_TYPE}+{self.__DB_DRIVER}://{self.__DB_USER}:{self.__DB_PASS}@{self.__DB_HOST}:{self.__DB_PORT}/{self.__DB_NAME}'
-        self.__ENGINE = create_engine(DATABASE_URI)
+        DATABASE_URI = f'{self.DB_TYPE}+{self.DB_DRIVER}://{self.DB_USER}:{self.DB_PASS}@{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}'
+        self.ENGINE = create_engine(DATABASE_URI)
 
-    def __query_database(self, query) -> None:
-        resultado = pd.read_sql(query, con= self.__ENGINE)
-        self.__ENGINE.dispose()
+    def query_database(self, query) -> None:
+        resultado = pd.read_sql(query, con= self.ENGINE)
+        self.ENGINE.dispose()
         return resultado
     
     def verify_engine(self) -> bool:
         try:
-            self.__ENGINE.connect()
-            self.__ENGINE.dispose()
+            self.ENGINE.connect()
+            self.ENGINE.dispose()
             return True
         except:
             return False
