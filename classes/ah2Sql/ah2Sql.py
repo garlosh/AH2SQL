@@ -16,15 +16,19 @@ class ah2Sql(sqlHandler):
         try:
             response = requests.get(self.API_URL).json()
             return response
-        except:
-            return False
+        except Exception as e:
+            raise e
 
     def change_token(self, token) -> None:
         self.ACCESS_TOKEN = token
     
     def extract_data(self) -> None:
         #Resposta da Api
-        response = self.get_api_data()
+        try:
+            response = self.get_api_data()
+        except:
+            return None
+        
         
         #Tratando o json para o pandas
         df = pd.DataFrame(response['auctions'])
@@ -39,13 +43,15 @@ class ah2Sql(sqlHandler):
         df['buyout'] = df['buyout'].apply(lambda x: x/10000)
         df.drop(df[df['buyout'] == 0].index, inplace = True)
         df['buyout'] = df.apply(lambda x: x['buyout']/x['quantity'], axis=1)
+        
+        #Calculando estatísticas
         df = df.groupby('item')
         df = df['buyout'].describe()
         df['safra'] = datetime.now()
         df = df.rename_axis("item").reset_index()
         df = df.drop(columns= ['25%', '75%'])
         df = df.rename(columns= {'count':'contagem', 'std': 'desvio', 'min':'minimo', 'mean':'media','50%':'mediana', 'max':'maximo'})
-        df['item'] = df['item'].astype(str)
+        df['item'] = df ['item'].astype(str)
         df = df.merge(relacao_itens, how='left', on = 'item')
 
         df.to_sql(self.DB_TABLE, con=self.ENGINE, if_exists='append', index=False)

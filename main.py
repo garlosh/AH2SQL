@@ -10,9 +10,7 @@ def main_extractor(token_acesso: tokenHandler, motor: ah2Sql) -> None:
         token_acesso.get_access_token()
         motor.change_token(token_acesso.ACCESS_TOKEN)
         log_message('Token de acesso invalido, executando novamente o processo')
-        main_extractor(token_acesso, motor)
-        log_message(f'Extração realizada com sucesso {datetime.now()}')
-        log_message(f'Próxima extração em {datetime.now() + timedelta(hours = 1)}')
+    
     if motor.verify_engine():
         try:
             log_message(f'Executando extração {datetime.now()}')
