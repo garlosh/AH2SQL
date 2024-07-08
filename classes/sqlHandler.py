@@ -17,7 +17,11 @@ class sqlHandler:
         DATABASE_URI = f'{self.DB_TYPE}+{self.DB_DRIVER}://{self.DB_USER}:{self.DB_PASS}@{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}'
         self.ENGINE = create_engine(DATABASE_URI)
 
-    def query_database(self, query) -> None:
+    def execute_query(self, query) -> None:
+        with self.ENGINE.connect() as connection:
+            connection.execute(query)
+
+    def query_database(self, query) -> pd.DataFrame:
         resultado = pd.read_sql(query, con= self.ENGINE)
         self.ENGINE.dispose()
         return resultado

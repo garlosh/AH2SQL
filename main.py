@@ -1,10 +1,18 @@
 import schedule
+import threading
 import time
 from tokenHandler.tokenHandler import *
 from classes import *
 from utils import *
 from datetime import datetime
 
+def run_in_thread(func):
+    def run(*k, **kw):
+        t = threading.Thread(target=func, args=k, kwargs=kw)
+        t.start()
+        return t
+    return run
+@run_in_thread
 def main_extractor(token_acesso: tokenHandler, motor: ah2Sql) -> None:
     if not token_acesso.is_valid():
         token_acesso.get_access_token()
@@ -29,6 +37,7 @@ if __name__ == '__main__':
     token_acesso.get_access_token()
     motor = ah2Sql('mysql', 'pymysql', 'root', '', 'localhost', '3306', 'ah2sql', 'summary', token_acesso.ACCESS_TOKEN)
     schedule.every(1).hours.do(main_extractor, token_acesso, motor)
+    schedule.every().day.at("00:00").do()
     main_extractor(token_acesso, motor)
     while True:
         schedule.run_pending() 
