@@ -35,8 +35,8 @@ class ah2Sql(sqlHandler):
         del response
 
         #Pegando a database de nomes para merge
-        relacao_itens = self.query_database('SELECT * FROM item_db')
-        relacao_itens['item'] = relacao_itens['item'].astype(str)
+        #relacao_itens = self.query_database('SELECT * FROM item_db')
+        #relacao_itens['item'] = relacao_itens['item'].astype(str)
         
         #Limpando os dados
         df['item'] = df['item'].apply(lambda x: x['id'])
@@ -51,8 +51,8 @@ class ah2Sql(sqlHandler):
         df = df.rename_axis("item").reset_index()
         df = df.drop(columns= ['25%', '75%'])
         df = df.rename(columns= {'count':'contagem', 'std': 'desvio', 'min':'minimo', 'mean':'media','50%':'mediana', 'max':'maximo'})
-        df['item'] = df ['item'].astype(str)
-        df = df.merge(relacao_itens, how='left', on = 'item')
+        df['item'] = df['item'].astype(str)
+        #df = df.merge(relacao_itens, how='left', on = 'item')
 
         df.to_sql(self.DB_TABLE, con=self.ENGINE, if_exists='append', index=False)
         self.ENGINE.dispose()
