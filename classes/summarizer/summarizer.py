@@ -11,9 +11,6 @@ class summarizer(sqlHandler):
         super().__post_init__()
     
     def verify_summarization(self) -> None:
-        #Busca todas as safras presentes
-        resultado = self.query_database(f'SELECT date(safra) as stat_day FROM {self.DB_TABLE} GROUP BY stat_day;')
-
         #Calcula self.LIMIT_DATE dias no passado
         dados_passados = datetime.now() - timedelta(days= self.LIMIT_DATE)
 

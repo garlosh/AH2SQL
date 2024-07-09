@@ -14,6 +14,9 @@ def log_message(message, log_file='log.txt', print_msg = True) -> None:
     with open(log_file, 'a') as file:
         file.write(message + '\n')
 
-def run_threaded(job_func):
-    job_thread = threading.Thread(target=job_func)
-    job_thread.start()
+def run_in_thread(func):
+    def run(*k, **kw):
+        t = threading.Thread(target=func, args=k, kwargs=kw)
+        t.start()
+        return t
+    return run
